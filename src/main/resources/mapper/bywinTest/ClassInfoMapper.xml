@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.bywin.bywinTest.dao.ClassInfoMapper" >
+  	<sql id="Condition">
+		<where>
+				<if test="classId !=null and classId !=''">
+					and t.class_id = #{classId,jdbcType=VARCHAR}
+				</if>
+				<if test="className !=null and className !=''">
+					and t.class_name LIKE CONCAT(CONCAT('%', #{className,jdbcType=VARCHAR}),'%')
+				</if>
+				<if test="createTime !=null and createTime !=''">
+					and t.create_time LIKE CONCAT(CONCAT('%', #{createTime,jdbcType=VARCHAR}),'%')
+				</if>
+				<if test="editTime !=null and editTime !=''">
+					and t.edit_time LIKE CONCAT(CONCAT('%', #{editTime,jdbcType=VARCHAR}),'%')
+				</if>
+			<!-- TODO -->
+		</where>
+	</sql>
+	<sql id="all">
+		c.class_name,
+		s.student_name,
+		s.create_time,
+		s.edit_time
+	</sql>
+	<resultMap id="resultMap" type="ClassInfo">
+		<id property="classId" column="class_id"/>
+		<result property="className" column="class_name"/>
+		<result property="createTime" column="create_time"/>
+		<result property="editTime" column="edit_time"/>
+		<collection property="studentInfoList" ofType="StudentInfo">
+			<id property="studentId" column="student_id"/>
+			<result property="studentName" column="student_name"/>
+			<result property="classId" column="class_id"/>
+			<result property="createTime" column="create_time"/>
+			<result property="editTime" column="edit_time"/>
+		</collection>
+	</resultMap>
+
+
+	<select id="selectAllClassId" resultMap="resultMap">
+		select class_id,class_name
+		from class_info
+	</select>
+
+<!--	<select id="selectClassId" parameterMap="classInfo" resultType="java.lang.Long">-->
+<!--		select class_id-->
+<!--		from class_info-->
+<!--		<include refid="Condition"/>-->
+<!--	</select>-->
+
+	
+	<select id="selectStudentsNum" parameterType="java.lang.Long" resultMap="resultMap">
+		select <include refid="all"></include>
+		from class_info as c join student_info as s on c.class_id=s.class_id
+		where c.class_id=#{c.class_id}
+	</select>
+</mapper>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.bywin.bywinTest.dao.ClassInfoMapper" >
+    <resultMap id="BaseResultMap" type="cn.bywin.bywinTest.model.ClassInfo" >
+        <id column="class_id" property="classId" jdbcType="BIGINT" />
+        <result column="class_name" property="className" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="edit_time" property="editTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        class_id, class_name, create_time, edit_time
+    </sql>
+    <sql id="Pagination" >
+        <if test="page != null and page.start !=null" >
+            LIMIT #{page.start,jdbcType=INTEGER},#{page.pageSize,jdbcType=INTEGER}
+        </if>
+    </sql>
+    <select id="selectCount" resultType="int" parameterType="Map" >
+        select count(*) from class_info t 
+        <include refid="Condition" />
+    </select>
+    <select id="selectList" resultType="cn.bywin.common.model.DataMap" parameterType="Map" >
+        select t.* from class_info t 
+        <include refid="Condition" />
+        <include refid="Pagination" />
+    </select>
+    <select id="selectAllList" resultMap="BaseResultMap" parameterType="cn.bywin.bywinTest.model.ClassInfo" >
+        select 
+        <include refid="Base_Column_List" />
+        from class_info t 
+        <include refid="Condition" />
+    </select>
+    <select id="selectByMap" resultType="cn.bywin.common.model.DataMap" parameterType="Map" >
+        select t.* from class_info t 
+        <include refid="Condition" />
+    </select>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+        select 
+        <include refid="Base_Column_List" />
+        from class_info
+        where class_id = #{classId,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+        delete from class_info
+        where class_id = #{classId,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" parameterType="cn.bywin.bywinTest.model.ClassInfo" >
+        insert into class_info (class_id, class_name, create_time, 
+            edit_time)
+        values (#{classId,jdbcType=BIGINT}, #{className,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{editTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="cn.bywin.bywinTest.model.ClassInfo" >
+        insert into class_info
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="classId != null" >
+                class_id,
+            </if>
+            <if test="className != null" >
+                class_name,
+            </if>
+            <if test="createTime != null" >
+                create_time,
+            </if>
+            <if test="editTime != null" >
+                edit_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="classId != null" >
+                #{classId,jdbcType=BIGINT},
+            </if>
+            <if test="className != null" >
+                #{className,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="editTime != null" >
+                #{editTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="cn.bywin.bywinTest.model.ClassInfo" >
+        update class_info
+        <set >
+            <if test="className != null" >
+                class_name = #{className,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="editTime != null" >
+                edit_time = #{editTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where class_id = #{classId,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="cn.bywin.bywinTest.model.ClassInfo" >
+        update class_info
+        set class_name = #{className,jdbcType=VARCHAR},
+            create_time = #{createTime,jdbcType=TIMESTAMP},
+            edit_time = #{editTime,jdbcType=TIMESTAMP}
+        where class_id = #{classId,jdbcType=BIGINT}
+    </update>
+</mapper>

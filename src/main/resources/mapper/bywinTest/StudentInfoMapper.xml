@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.bywin.bywinTest.dao.StudentInfoMapper" >
+  	<sql id="Condition">
+		<where>
+				<if test="studentId !=null and studentId !=''">
+					and t.student_id = #{studentId,jdbcType=VARCHAR}
+				</if>
+				<if test="studentName !=null and studentName !=''">
+					and t.student_name LIKE CONCAT(CONCAT('%', #{studentName,jdbcType=VARCHAR}),'%')
+				</if>
+				<if test="classId !=null and classId !=''">
+					and t.class_id = #{classId,jdbcType=VARCHAR}
+				</if>
+				<if test="createTime !=null and createTime !=''">
+					and t.create_time LIKE CONCAT(CONCAT('%', #{createTime,jdbcType=VARCHAR}),'%')
+				</if>
+				<if test="editTime !=null and editTime !=''">
+					and t.edit_time LIKE CONCAT(CONCAT('%', #{editTime,jdbcType=VARCHAR}),'%')
+				</if>
+			<!-- TODO -->
+		</where>
+	</sql>
+	<resultMap id="resultMap" type="StudentInfo">
+		<id property="studentId" column="student_id"/>
+		<result property="studentName" column="student_name"/>
+		<result property="classId" column="class_id"/>
+		<result property="createTime" column="create_time"/>
+		<result property="editTime" column="edit_time"/>
+		<collection property="studentScoreList" ofType="StudentScore">
+			<id property="scoreId" column="score_id"/>
+			<result property="studentId" column="student_id"/>
+			<result property="subject" column="subject"/>
+			<result property="score" column="score"/>
+		</collection>
+	</resultMap>
+	<resultMap id="zidingyi" type="java.util.Map">
+		<result column="subject" property="subject"/>
+		<result column="avg(score)" property="avgnum"/>
+	</resultMap>
+	<select id="selectScore" parameterType="java.lang.Long" resultMap="zidingyi">
+		select subject,avg(score)
+		from(select sc.subject,sc.score
+			from student_info as s join student_score as sc on s.student_id=sc.student_id
+			where class_id=#{s.class_id}) as newtable
+		group by subject
+	</select>
+</mapper>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.bywin.bywinTest.dao.StudentScoreMapper" >
+  	<sql id="Condition">
+		<where>
+				<if test="scoreId !=null and scoreId !=''">
+					and t.score_id = #{scoreId,jdbcType=VARCHAR}
+				</if>
+				<if test="studentId !=null and studentId !=''">
+					and t.student_id = #{studentId,jdbcType=VARCHAR}
+				</if>
+				<if test="subject !=null and subject !=''">
+					and t.subject LIKE CONCAT(CONCAT('%', #{subject,jdbcType=VARCHAR}),'%')
+				</if>
+				<if test="score !=null and score !=''">
+					and t.score LIKE CONCAT(CONCAT('%', #{score,jdbcType=VARCHAR}),'%')
+				</if>
+			<!-- TODO -->
+		</where>
+	</sql>
+	<resultMap id="resultMap" type="StudentScore">
+		<id property="scoreId" column="score_id"/>
+		<result property="studentId" column="student_id"/>
+		<result property="subject" column="subject"/>
+		<result property="score" column="score"/>
+	</resultMap>
+	<select id="selectSubject" resultType="java.lang.String">
+		select distinct subject
+		from student_score
+	</select>
+</mapper>
